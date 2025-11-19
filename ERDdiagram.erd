@@ -1,39 +1,43 @@
 https://dbdiagram.io/d
 
-table client {
-  id integer [primary key]
-  name string
-}
-
-table car{
-  id integer [primary key]
-  name string
-}
-
-table worker {
-  id integer [primary key]
-  name string
-  order_id integer [ref: - order.id]
-  carwash_id integer [ref: - carwash.id]
-}
-
-table carwash{
-  id integer [pk]
-  worker_id integer [ref: < worker.id]
-  city_id integer [ref: > city.id]
-  service_id integer [ref: < service.id]
-}
-
 table city{
   id integer [pk]
   name string
-  district_id integer [ref: < district.id]
-  washer_id integer [ref: < carwash.id]
+  district_id integer [ref: > district.id]
 }
 
 table district{
   id integer [pk]
   name string 
+}
+
+table carwash{
+  id integer [pk]
+  worker_id integer
+  city_id integer [ref: > city.id]
+  box_id integer
+  service_id integer [ref: < service.id]
+}
+
+table client {
+  id integer [pk]
+  name string
+}
+
+table car{
+  id integer [pk]
+  name string
+}
+
+table worker {
+  id integer [pk]
+  name string
+  carwash_id integer [ref: > carwash.id]
+}
+
+table box{
+  id integer [pk]
+  carwash_id integer [ref: > carwash.id]
 }
 
 table service{
@@ -48,31 +52,27 @@ table slot{
   time time
 }
 
-table box{
-  id integer [pk]
-  carwash_id integer [ref: > carwash.id]
-}
-
 table order{
-  id integer [primary key]
-  client_id integer [ref: < client.id]
+  id integer [pk]
+  client_id integer [ref: - client.id]
   car_id integer [ref: - car.id]
-  slot_id integer [ref: - slot.id]
+  worker_id integer [ref: < worker.id]
   box_id integer [ref: - box.id]
-  worker_id integer [ref: - worker.id]
+  service_id integer [ref: < service.id]
+  slot_id integer [ref: - slot.id]
 }
 
-table carwashXservice{
+table carwash_x_service{
   carwash_id integer [ref: - carwash.id]
   service_id integer [ref: - service.id]
 }
 
-table orderXservice{
+table order_x_service{
   order_id integer [ref: - order.id]
   service_id integer [ref: - service.id]
 }
 
-table clientXcar{
+table client_x_car{
   user_id integer [ref: - client.id]
   car_id integer [ref: - car.id]
 }
